@@ -7,6 +7,6 @@ permalink: /changelog/
 
 # Changelog
 
-## 2019-08-02
+## 2019-09-08
 
 First version
