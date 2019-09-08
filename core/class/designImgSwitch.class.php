@@ -20,32 +20,53 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class designImgSwitch extends eqLogic {
-    /*     * *************************Attributs****************************** */
 
-    /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
-      public static function cron() {
+    public static function pullRefresh($_option) {
+        log::add(__CLASS__, 'debug', 'pullRefresh started');
 
-      }
-     */
-    /*
-    public static function cron5() {
-
+        $eqLogic = self::byId($_option['id']);
+		if (is_object($eqLogic) && $eqLogic->getIsEnable() == 1) {
+			$eqLogic->refreshPlanHeaderBackground();
+        }
     }
-    */
-/*
-    public static function cronHourly() {
-
-    }
-*/
-     /*
-      public static function cronDaily() {
-
-      }
-    */
 
 
     /*     * *********************Méthodes d'instance************************* */
+
+    private function getListener() {
+        return listener::byClassAndFunction(__CLASS__, 'pullRefresh', array('id' => $this->getId()));
+    }
+
+    private function removeListener() {
+        $listener = $this->getListener();
+        if (is_object($listener)) {
+            $listener->remove();
+        }
+    }
+
+    private function setListener() {
+        if ($this->getIsEnable() == 0) {
+            $this->removeListener();
+            return;
+        }
+
+        $this->checkConfigurationAndGetCommands($cmd_condition, $cmd_sunrise, $cmd_sunset);
+
+        $listener = $this->getListener();
+        if (!is_object($listener)) {
+            $listener = new listener();
+            $listener->setClass(__CLASS__);
+            $listener->setFunction('pullRefresh');
+            $listener->setOption(array('id' => $this->getId()));
+        }
+        $listener->emptyEvent();
+        $listener->addEvent($cmd_condition->getId());
+        $listener->addEvent($cmd_sunrise->getId());
+        $listener->addEvent($cmd_sunset->getId());
+        $listener->save();
+
+        $this->refreshPlanHeaderBackground();
+    }
 
     public function preInsert() {
 
@@ -81,7 +102,7 @@ class designImgSwitch extends eqLogic {
     }
 
     public function postUpdate() {
-
+        $this->setListener();
     }
 
     public function preRemove() {
@@ -89,7 +110,7 @@ class designImgSwitch extends eqLogic {
     }
 
     public function postRemove() {
-
+        $this->removeListener();
     }
 
     private function checkConfigurationAndGetCommands(&$cmd_condition = null, &$cmd_sunrise=null, &$cmd_sunset=null) {
