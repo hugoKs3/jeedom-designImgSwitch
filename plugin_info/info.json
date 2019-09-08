@@ -12,7 +12,7 @@
 	"changelog" : "https://mips2648.github.io/jeedom-designImgSwitch/changelog/",
 	"documentation" : "https://mips2648.github.io/jeedom-designImgSwitch/#language#/",
 	"link" : {
-		"forum":"",
+		"forum":"https://www.jeedom.com/forum/viewtopic.php?f=139&t=47479",
 		"video" : ""
 	},
 	"language" : ["fr_FR", "en_US"],
