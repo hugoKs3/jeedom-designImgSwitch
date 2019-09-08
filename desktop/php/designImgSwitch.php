@@ -2,7 +2,7 @@
 if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
-$plugin = plugin::byId('wallpaperswitcher');
+$plugin = plugin::byId('designImgSwitch');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 ?>
@@ -103,12 +103,44 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                     <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
                                 </div>
                             </div>
+                            <br/>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Token}}</label>
-                                <div class="col-sm-3">
-                                    <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="token" placeholder="{{Saisir le token}}"/>
+                                <label class="col-sm-3 control-label" >{{Design}}</label>
+                                <div class="col-sm-9">
+                                    <?php
+                                        foreach (planHeader::all() as $planHeader) {
+                                        echo '<label class="checkbox-inline">';
+                                        echo '<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="planHeader" data-l3key="' . $planHeader->getId() . '" />' . $planHeader->getName();
+                                        echo '</label>';
+                                        }
+                                    ?>
                                 </div>
                             </div>
+                            <?php
+                                if (!class_exists('weather')) {
+                                    echo '<div class="alert alert-danger">'.__("Vous devez installer et activer le plugin Météo (weather) officiel", __FILE__).'</div>';
+                                } else {
+                                    $weatherEqLogics = eqLogic::bytype('weather', true);
+                                    if (!is_array($weatherEqLogics) || count($weatherEqLogics)==0) {
+                                        echo '<div class="alert alert-danger">'.__("Vous devez ajouter et activer un équipement dans le plugin Météo (weather) officiel", __FILE__).'</div>';
+                                    } else {
+                                    ?>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{Equipement météo}}</label>
+                                            <div class="col-sm-3">
+                                                <select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="weatherEqLogic">
+                                                    <?php
+                                                        foreach (eqLogic::bytype('weather', true) as $eqLogic) {
+                                                            echo '<option value="' . $eqLogic->getId() . '">' . $eqLogic->getName() . '</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                }
+                            ?>
                         </fieldset>
                     </form>
                 </div>
@@ -131,5 +163,5 @@ $eqLogics = eqLogic::byType($plugin->getId());
     </div>
 </div>
 
-<?php include_file('desktop', 'wallpaperswitcher', 'js', 'wallpaperswitcher');?>
+<?php include_file('desktop', 'designImgSwitch', 'js', 'designImgSwitch');?>
 <?php include_file('core', 'plugin.template', 'js');?>

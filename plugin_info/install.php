@@ -18,16 +18,16 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
-function wallpaperswitcher_install() {
+function designImgSwitch_install() {
 
 }
 
-function wallpaperswitcher_update() {
+function designImgSwitch_update() {
 
 }
 
 
-function wallpaperswitcher_remove() {
+function designImgSwitch_remove() {
 
 }
 
