@@ -1,36 +1,36 @@
 ---
 layout: default
 title: Index
-lang: fr_FR
+lang: en_US
 ---
 
 # Description
 
-Plugin permettant de changer automatiquement l'image de fond de vos design en fonction de la météo.
-Les informations de météo ainsi que de lever et coucher du soleil seront obtenues du plugin Météo officiel.
+Plugin to automatically change the background image of your design according to the weather.
+Weather, sunrise and sunset information will be obtained from the official weather plugin.
 
 # Installation
 
-Afin d’utiliser le plugin, vous devez le télécharger, l’installer et l’activer comme tout plugin Jeedom.
-Vous devrez aussi installer et configurer le plugin Météo officiel (weather).
+In order to use the plugin, you must download, install and activate it like any Jeedom plugin.
+You will also need to install and configure the official weather plugin.
 
-Il n'y a aucune configuration à effectuer au niveau du plugin.
+There is no configuration to perform at the plugin level.
 
-# Configuration de l'équipement
+# Device configuration
 
-Le plugin se trouve dans le menu Plugins > Météo.
-Après avoir créé un nouvel équipement, les options habituelles sont disponnible.
+The plugin is in the Plugins > Weather menu.
+After creating new device, the usual options are available.
 
-Il suffit alors de sélectionner les designs pour lesquels vous voulez changer l'image de fond en fonction de la météo et de choisir l'équipement météo à utiliser.
-Si aucune équipement météo n'est actif, vous verrez un message d'erreur.
+Then select the designs for which you want to change the background image according to the weather and choose the weather device to use.
+If no weather device is active, you will see an error message.
 
-# Activation de l'équipement
+# Device activation
 
-Dès que la configuration est faite, vous pouvez activer l'équipement et sauvegarder.
-Les designs sélectionnés seront immédiatement mis à jour et cela à chaque fois que les conditions météos changent ainsi qu'à l'heure du lever et du coucher du soleil.
-Aucune autre action ni aucun autre scénario n'est nécessaire.
+As soon as the configuration is done, you can activate the device and save it.
+Selected designs will be immediately updated and this each time weather condition change and at sunrise and sunset.
+No other action or scenario is needed.
 
-# Commande "Rafraichir"
+# "Refresh" command
 
-L'équipement dispose d'une commande "Rafraichir" pour mettre à jour manuellement les designs liés.
-A priori celle-ci ne doit jamais être utilisée, les images de fonds seront déjà automatiquement mises à jours à chaque fois que nécessaire.
+The device has a "Refresh" command to update manually the selected designs.
+In normal condition, this command should nerver be used, background images will be automatically updated whenever is needed.
