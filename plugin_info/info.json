@@ -15,6 +15,6 @@
 		"forum":"https://www.jeedom.com/forum/viewtopic.php?f=139&t=47479",
 		"video" : ""
 	},
-	"language" : ["fr_FR", "en_US"],
+	"language" : ["fr_FR", "en_US", "de_DE"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"]
 }
