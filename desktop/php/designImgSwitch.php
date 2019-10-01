@@ -141,6 +141,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                     }
                                 }
                             ?>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label help" data-help="{{Après un changement d'image de fond, forcer le rafraichissement et aller sur le design sélectionné}}">{{Aller au design}}</label>
+                                <div class="col-sm-3">
+                                    <select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="gotoDesign">
+                                        <option value="">{{Désactivé}}</option>
+                                        <?php
+                                            foreach (planHeader::all() as $planHeader) {
+                                                echo '<option value="' . $planHeader->getId() . '">' . $planHeader->getName() . '</option>';
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                         </fieldset>
                     </form>
                 </div>

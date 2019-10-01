@@ -220,6 +220,12 @@ class designImgSwitch extends eqLogic {
             file_put_contents($planfilepath,file_get_contents($file));
             $planHeader->save();
         }
+
+        $gotoDesignId = $this->getConfiguration('gotoDesign', '');
+        if ($gotoDesignId != '') {
+            log::add(__CLASS__, 'info', __('Changement design : ', __FILE__) . $gotoDesignId);
+            event::add('jeedom::gotoplan', $gotoDesignId);
+        }
     }
 }
 
