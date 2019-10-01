@@ -1,0 +1,39 @@
+{
+    "plugins\/designImgSwitch\/desktop\/php\/designImgSwitch.php": {
+        "Gestion": "Verwaltung",
+        "Ajouter": "Hinzufügen",
+        "Configuration": "Konfiguration",
+        "Documentation": "Dokumentation",
+        "Mes Wallpapers": " Meine Hintergründe",
+        "Rechercher": "Suchen",
+        "Configuration avancée": "Erweiterte Konfiguration",
+        "Supprimer": "Löschen",
+        "Sauvegarder": "Speichern",
+        "Equipement": "Gerät",
+        "Commandes": "Befehle",
+        "Nom de l'équipement": "Gerätename",
+        "Objet parent": "Elternobjekt",
+        "Aucun": "Keine",
+        "Catégorie": "Kategorie",
+        "Activer": "Aktivieren",
+        "Visible": "Sichtbar",
+        "Design": "Design",
+        "Equipement météo": "Wetterausrüstung",
+        "Nom": "Name",
+        "Paramètres": "Parameter",
+        "Options": "Optionen",
+        "Actions": "Aktionen"
+    },
+    "plugins\/designImgSwitch\/desktop\/js\/designImgSwitch.js": {
+        "Nom": "Name",
+        "Historiser": "Archivieren",
+        "Afficher": "Anzeigen",
+        "Unité": "Einheit",
+        "Min": "Min",
+        "Max": "Max",
+        "Tester": "Testen"
+    },
+    "plugins\/designImgSwitch\/core\/class\/designImgSwitch.class.php": {
+        "Mise à jour de l'image de fond du design %s avec %s.jpg": "Aktualisieren vom Design Hintergrundbild %s mit %s.jpg"
+    }
+}

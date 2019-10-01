@@ -208,7 +208,7 @@ class designImgSwitch extends eqLogic {
         $sha512 = sha512($data);
         $type = 'jpg';
         foreach($planHeaders as $planId) {
-            log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $valeur_condition));
+            log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $moment . '/' . $valeur_condition));
             $planHeader = planHeader::byId($planId);
             $planHeader->setImage('type', $type);
             $planHeader->setImage('size', $img_size);
@@ -219,6 +219,12 @@ class designImgSwitch extends eqLogic {
             log::add(__CLASS__, 'debug', "planfilepath : {$planfilepath}");
             file_put_contents($planfilepath,file_get_contents($file));
             $planHeader->save();
+        }
+
+        $gotoDesignId = $this->getConfiguration('gotoDesign', '');
+        if ($gotoDesignId != '') {
+            log::add(__CLASS__, 'info', __('Changement design : ', __FILE__) . $gotoDesignId);
+            event::add('jeedom::gotoplan', $gotoDesignId);
         }
     }
 }
