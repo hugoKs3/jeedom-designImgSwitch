@@ -22,7 +22,10 @@
         "Nom": "Name",
         "Paramètres": "Settings",
         "Options": "Options",
-        "Actions": "Actions"
+        "Actions": "Actions",
+        "Aller au design": "Aller au design",
+        "Désactivé": "Désactivé",
+        "Après un changement d'image de fond, forcer le rafraichissement et aller sur le design sélectionné": "Après un changement d'image de fond, forcer le rafraichissement et aller sur le design sélectionné"
     },
     "plugins\/designImgSwitch\/desktop\/js\/designImgSwitch.js": {
         "Nom": "Name",
@@ -34,6 +37,7 @@
         "Tester": "Test"
     },
     "plugins\/designImgSwitch\/core\/class\/designImgSwitch.class.php": {
-        "Mise à jour de l'image de fond du design %s avec %s.jpg": "Update of the background image of the design %s with %s.jpg"
+        "Mise à jour de l'image de fond du design %s avec %s.jpg": "Update of the background image of the design %s with %s.jpg",
+        "Changement design : ": "Changement design : "
     }
 }
