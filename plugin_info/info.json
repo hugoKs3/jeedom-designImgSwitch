@@ -12,9 +12,9 @@
 	"changelog" : "https://mips2648.github.io/jeedom-designImgSwitch/changelog/",
 	"documentation" : "https://mips2648.github.io/jeedom-designImgSwitch/#language#/",
 	"link" : {
-		"forum":"https://www.jeedom.com/forum/viewtopic.php?f=139&t=47479",
+		"forum":"https://community.jeedom.com/tags/plugin-designimgswitch",
 		"video" : ""
 	},
 	"language" : ["fr_FR", "en_US", "de_DE"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
 }
