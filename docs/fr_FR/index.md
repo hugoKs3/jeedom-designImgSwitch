@@ -19,7 +19,7 @@ Il n'y a aucune configuration à effectuer au niveau du plugin.
 # Configuration de l'équipement
 
 Le plugin se trouve dans le menu Plugins > Météo.
-Après avoir créé un nouvel équipement, les options habituelles sont disponnible.
+Après avoir créé un nouvel équipement, les options habituelles sont disponible.
 
 Il suffit alors de sélectionner les designs pour lesquels vous voulez changer l'image de fond en fonction de la météo et de choisir l'équipement météo à utiliser.
 Si aucune équipement météo n'est actif, vous verrez un message d'erreur.
