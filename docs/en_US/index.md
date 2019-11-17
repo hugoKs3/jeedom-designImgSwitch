@@ -18,8 +18,8 @@ There is no configuration to perform at the plugin level.
 
 # Device configuration
 
-The plugin is in the Plugins > Weather menu.
-After creating new device, the usual options are available.
+Le plugin se trouve dans le menu Plugins > Météo.
+Après avoir créé un nouvel équipement, les options habituelles sont disponible.
 
 Then select the designs for which you want to change the background image according to the weather and choose the weather device to use.
 If no weather device is active, you will see an error message.
@@ -34,3 +34,11 @@ No other action or scenario is needed.
 
 The device has a "Refresh" command to update manually the selected designs.
 In normal condition, this command should nerver be used, background images will be automatically updated whenever is needed.
+
+# Changelog
+
+[Voir le changelog](./changelog)
+
+# Support
+
+Si malgré cette documentation et après voir lu les sujets en rapport avec le plugin sur [community]({{site.forum}}) vous ne trouvez pas de réponse à votre question, n'hésitez pas à créer un nouveau sujet en n'oubliant pas de mettre le tag du plugin ({{site.tagPlugin}}).
