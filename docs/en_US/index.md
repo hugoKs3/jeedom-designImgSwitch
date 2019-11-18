@@ -18,8 +18,8 @@ There is no configuration to perform at the plugin level.
 
 # Device configuration
 
-Le plugin se trouve dans le menu Plugins > Météo.
-Après avoir créé un nouvel équipement, les options habituelles sont disponible.
+The plugin is in the Plugins > Weather menu.
+After creating new device, the usual options are available.
 
 Then select the designs for which you want to change the background image according to the weather and choose the weather device to use.
 If no weather device is active, you will see an error message.
@@ -37,8 +37,8 @@ In normal condition, this command should nerver be used, background images will 
 
 # Changelog
 
-[Voir le changelog](./changelog)
+[See the changelog](./changelog)
 
 # Support
 
-Si malgré cette documentation et après voir lu les sujets en rapport avec le plugin sur [community]({{site.forum}}) vous ne trouvez pas de réponse à votre question, n'hésitez pas à créer un nouveau sujet en n'oubliant pas de mettre le tag du plugin ({{site.tagPlugin}}).
+If despite this documentation and after having read the topics related to the plugin on [community]({{site.forum}}) you do not find an answer to your question, do not hesitate to create a new topic with the tag of the plugin ({{site.tagPlugin}}).
