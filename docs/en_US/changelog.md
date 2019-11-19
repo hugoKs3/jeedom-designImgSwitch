@@ -1,16 +1,16 @@
 ---
 layout: default
 title: Changelog
-lang: fr_FR
+lang: en_US
 ---
 
 # Changelog
 
 ## 2019-10-01
 
-- Ajout des traduction anglaise et allemande
-- Ajout d'une option pour forcer le rafraîchissement après une changement de l'image de fond
+- Addition of English and German translations
+- Added an option to force refresh after a change of the background image
 
 ## 2019-09-08
 
-- Première version
+- First version
