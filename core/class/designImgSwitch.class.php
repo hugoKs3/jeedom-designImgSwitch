@@ -209,13 +209,21 @@ class designImgSwitch extends eqLogic {
         $type = 'jpg';
         foreach($planHeaders as $planId) {
             log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $moment . '/' . $valeur_condition));
+
+            $oldFiles = ls(__DIR__ . '/../../../../data/plan/','planHeader'.$planId.'*');
+            if(count($oldFiles)  > 0){
+                foreach ($oldFiles as $oldFile) {
+                    unlink(__DIR__ . '/../../../../data/plan/'.$oldFile);
+                }
+            }
+
             $planHeader = planHeader::byId($planId);
             $planHeader->setImage('type', $type);
             $planHeader->setImage('size', $img_size);
             $planHeader->setImage('sha512', $sha512);
-
             $planfilename = 'planHeader'.$planId.'-'.$sha512.'.'.$type;
             $planfilepath = __DIR__ . '/../../../../data/plan/' . $planfilename;
+
             log::add(__CLASS__, 'debug', "planfilepath : {$planfilepath}");
             file_put_contents($planfilepath,file_get_contents($file));
             $planHeader->save();
