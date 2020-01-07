@@ -8,7 +8,7 @@ lang: en_US
 
 ## 2019-10-01
 
-- Ajout des traductions anglaise et allemande
+- Added English and German translations
 - Added an option to force refresh after a change of the background image
 
 ## 2019-09-08
