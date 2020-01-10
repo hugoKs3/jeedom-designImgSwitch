@@ -70,3 +70,8 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 $('.pluginAction[data-action=openLocation]').on('click',function(){
     window.open($(this).attr("data-location"), "_blank", null);
 });
+
+$('#bt_configImages').on('click', function () {
+    $('#md_modal').dialog({title: "{{Config Images}}"});
+    $('#md_modal').load('index.php?v=d&plugin=designImgSwitch&modal=config').dialog('open');
+});
