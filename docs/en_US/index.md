@@ -34,3 +34,11 @@ No other action or scenario is needed.
 
 The device has a "Refresh" command to update manually the selected designs.
 In normal condition, this command should nerver be used, background images will be automatically updated whenever is needed.
+
+# Changelog
+
+[See the changelog](./changelog)
+
+# Support
+
+If despite this documentation and after having read the topics related to the plugin on [community]({{site.forum}}) you do not find an answer to your question, do not hesitate to create a new topic with the tag of the plugin ({{site.tagPlugin}}).

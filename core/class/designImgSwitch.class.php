@@ -142,6 +142,44 @@ class designImgSwitch extends eqLogic {
         return $planHeader;
     }
 
+    private static function ConditionAsText($condition) {
+        log::add(__CLASS__, 'debug', "condition: {$condition}");
+
+        if (in_array($condition, array('781', '905', '902', '900', '952', '953', '954', '955', '956', '957', '960', '961'))) {
+            return "wind";
+        } else if (in_array($condition, array('800', '951'))) {
+            return "sun";
+        } else if ($condition == '909') {
+            return "rain";
+        }
+
+        switch (substr($condition, 0,1)) {
+            case '2':
+                return "storm";
+            case '3':
+                return "mist";
+            case '5':
+                return "rain";
+            case '6':
+                return "snow";
+              case '7':
+                return "mist";
+            case '8':
+                return "cloud";
+        }
+
+        return "default";
+    }
+
+    public static function getActivePicturePath($period, $condition) {
+        if (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.jpg")) {
+            return "pictures/custom/{$period}-{$condition}.jpg";
+        } elseif (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.png")) {
+            return "pictures/custom/{$period}-{$condition}.png";
+        }
+        return "pictures/default/{$period}-{$condition}.jpg";
+    }
+
     public function refreshPlanHeaderBackground() {
         $this->checkConfigurationAndGetCommands($cmd_condition, $cmd_sunrise, $cmd_sunset);
 
@@ -151,56 +189,21 @@ class designImgSwitch extends eqLogic {
             return;
         }
 
-        $condition = $cmd_condition->execCmd();
+        $condition = designImgSwitch::ConditionAsText($cmd_condition->execCmd());
         $sunrise = $cmd_sunrise->execCmd();
         $sunset = $cmd_sunset->execCmd();
 
-        $heure = date('Hi');
-        if ($heure>=$sunrise && $heure < $sunset) {
-            $moment = "jour";
+        $hour = date('Hi');
+        if ($hour>=$sunrise && $hour < $sunset) {
+            $period = "day";
         } else {
-            $moment = "nuit";
+            $period = "night";
         }
-        log::add(__CLASS__, 'debug', "jour / nuit ? : {$moment}");
+        log::add(__CLASS__, 'debug', "day / night ? : {$period}");
 
-        $numGroup = substr($condition, 0,1);
-        log::add(__CLASS__, 'debug', "condition : {$condition}");
 
-        switch ($numGroup) {
-            case '2':
-                $valeur_condition = "Orage";
-                break;
-            case '3':
-                $valeur_condition = "Brume";
-                break;
-            case '5':
-                $valeur_condition = "Pluie";
-                break;
-            case '6':
-                $valeur_condition = "Neige";
-                break;
-              case '7':
-                $valeur_condition = "Brume";
-                break;
-            case '8':
-                $valeur_condition = "Nuage";
-                break;
-            default:
-                $valeur_condition = "defaut";
-                break;
-        }
-
-        //Conditions particulières
-        if(in_array($condition, array('781', '905', '902', '900', '952', '953', '954', '955', '956', '957', '960', '961'))){
-            $valeur_condition = "Vent";
-        } else if(in_array($condition, array('800', '951'))){
-            $valeur_condition = "Soleil";
-        } else if($condition == '909'){
-            $valeur_condition = "Pluie";
-        }
-
-        log::add(__CLASS__, 'debug', "valeur_condition : {$valeur_condition}");
-        $file = realpath(__DIR__ . "/../images/{$moment}/{$valeur_condition}.jpg");
+        log::add(__CLASS__, 'debug', "condition as text : {$condition}");
+        $file = realpath(__DIR__ . '/../' . designImgSwitch::getActivePicturePath($period, $condition));
         log::add(__CLASS__, 'debug', "file : {$file}");
 
         $img_size = getimagesize($file);
@@ -208,14 +211,22 @@ class designImgSwitch extends eqLogic {
         $sha512 = sha512($data);
         $type = 'jpg';
         foreach($planHeaders as $planId) {
-            log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $moment . '/' . $valeur_condition));
+            log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $period . '/' . $condition));
+
+            $oldFiles = ls(__DIR__ . '/../../../../data/plan/','planHeader'.$planId.'*');
+            if(count($oldFiles)  > 0){
+                foreach ($oldFiles as $oldFile) {
+                    unlink(__DIR__ . '/../../../../data/plan/'.$oldFile);
+                }
+            }
+
             $planHeader = planHeader::byId($planId);
             $planHeader->setImage('type', $type);
             $planHeader->setImage('size', $img_size);
             $planHeader->setImage('sha512', $sha512);
-
             $planfilename = 'planHeader'.$planId.'-'.$sha512.'.'.$type;
             $planfilepath = __DIR__ . '/../../../../data/plan/' . $planfilename;
+
             log::add(__CLASS__, 'debug', "planfilepath : {$planfilepath}");
             file_put_contents($planfilepath,file_get_contents($file));
             $planHeader->save();
