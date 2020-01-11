@@ -6,6 +6,10 @@ lang: fr_FR
 
 # Changelog
 
+## 2020-01-11
+
+- Ajout d'une config pour personnaliser les images
+
 ## 2019-10-01
 
 - Ajout des traductions anglaise et allemande
