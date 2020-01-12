@@ -6,11 +6,15 @@ lang: en_US
 
 # Changelog
 
+## 2020-01-11
+
+- Ajout d'une config pour personnaliser les images
+
 ## 2019-10-01
 
-- Added English and German translations
-- Added an option to force refresh after a change of the background image
+- Ajout des traductions anglaise et allemande
+- Ajout d'une option pour forcer le rafraîchissement après une changement de l'image de fond
 
 ## 2019-09-08
 
-- First version
+- Première version
