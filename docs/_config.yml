@@ -1,5 +1,5 @@
 ---
-langs: [fr_FR, en_US, es_ES, de_DE]
+langs: [fr_FR, en_US, de_DE]
 baseurl: "/jeedom-designImgSwitch" # the subpath of your site, e.g. /blog
 url: "/" # the base hostname & protocol for your site
 sass:
