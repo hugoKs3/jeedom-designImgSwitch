@@ -69,7 +69,7 @@ class designImgSwitch extends eqLogic {
     }
 
     public function preInsert() {
-
+        $this->setConfiguration('cropImage', 1);
     }
 
     public function postInsert() {
@@ -133,13 +133,13 @@ class designImgSwitch extends eqLogic {
     }
 
     private function getPlanHeaders() {
-        $planHeader = array();
+        $planHeaders = array();
         foreach ($this->getConfiguration('planHeader') as $planHeaderId => $isActive) {
             if ($isActive == 1) {
-                $planHeader[] = $planHeaderId;
+                $planHeaders[] = $planHeaderId;
             }
         }
-        return $planHeader;
+        return $planHeaders;
     }
 
     private static function ConditionAsText($condition) {
@@ -171,13 +171,101 @@ class designImgSwitch extends eqLogic {
         return "default";
     }
 
-    public static function getActivePicturePath($period, $condition) {
+    public static function getPicturePath($period, $condition) {
         if (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.jpg")) {
             return "pictures/custom/{$period}-{$condition}.jpg";
         } elseif (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.png")) {
             return "pictures/custom/{$period}-{$condition}.png";
         }
         return "pictures/default/{$period}-{$condition}.jpg";
+    }
+
+    private static function SaveImagePlanHeader($planHeader, $sourceImage) {
+        $img_size = getimagesize($sourceImage);
+        $data = base64_encode(file_get_contents($sourceImage));
+        $sha512 = sha512($data);
+        $extension = strtolower(strrchr($sourceImage, '.'));
+
+        $planHeader->setImage('type', str_replace('.', '', $extension));
+        $planHeader->setImage('size', $img_size);
+        $planHeader->setImage('sha512', $sha512);
+        $planHeader->save();
+
+        $planfilename = 'planHeader'.$planHeader->getId().'-'.$sha512.$extension;
+        $planfilepath = __DIR__ . '/../../../../data/plan/' . $planfilename;
+        copy($sourceImage, $planfilepath);
+    }
+
+    private function AdaptAndSaveImgForPlan($sourceFile, $planId) {
+        $planHeader = planHeader::byId($planId);
+        log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image du design %s-%s avec %s" , __FILE__), $planId, $planHeader->getName(), $sourceFile));
+
+        if ($this->getConfiguration('cropImage', 1)==0) {
+            log::add(__CLASS__, 'debug', "no crop, copy image");
+            designImgSwitch::SaveImagePlanHeader($planHeader, $sourceFile);
+            return;
+        }
+
+        $img_size = getimagesize($sourceFile);
+        $imgWidth = $img_size[0];
+        $imgHeight = $img_size[1];
+        unset($img_size);
+        $planWidth = $planHeader->getConfiguration('desktopSizeX');
+        $planHeight = $planHeader->getConfiguration('desktopSizeY');
+        log::add(__CLASS__, 'debug', "image: {$imgWidth}/{$imgHeight} - plan:{$planWidth}/{$planHeight}");
+
+        $ratioWidth = $imgWidth/$planWidth;
+        $ratioheight = $imgHeight/$planHeight;
+        if ($ratioWidth == $ratioheight) {
+            log::add(__CLASS__, 'debug', "ratio is the same, copy image");
+            designImgSwitch::SaveImagePlanHeader($planHeader, $sourceFile);
+            return;
+        }
+
+        log::add(__CLASS__, 'debug', "crop image");
+        $extension = strtolower(strrchr($sourceFile, '.'));
+        $type = str_replace('.', '', $extension);
+        switch ($type) {
+            case 'jpg':
+                $imagecreatefromFunction = 'imagecreatefromjpeg';
+                $imageFunction = 'imagejpeg';
+                break;
+            case 'png':
+                $imagecreatefromFunction = 'imagecreatefrompng';
+                $imageFunction = 'imagepng';
+                break;
+            default:
+                throw new Exception('Unusupported image type');
+        }
+
+        $diffWidth = $imgWidth-$planWidth;
+        $diffHeight = $imgHeight-$planHeight;
+        log::add(__CLASS__, 'debug', "diffWidth:{$diffWidth} - diffHeight:{$diffHeight}");
+        if ($diffHeight>$diffWidth) {
+            $x = 0;
+            $newImgWith = $imgWidth;
+            $newImgHeight = $planHeight * $ratioWidth;
+            $y = ($imgHeight - $newImgHeight) / 2;
+            log::add(__CLASS__, 'debug', "keep width, newImgHeight:{$newImgHeight}");
+        } else {
+            $newImgWith = $planWidth * $ratioheight;
+            $x = ($imgWidth - $newImgWith) / 2;
+            $y = 0;
+            $newImgHeight = $imgHeight;
+            log::add(__CLASS__, 'debug', "keep height, newImgWith:{$newImgWith}");
+        }
+
+        $srcImg = $imagecreatefromFunction($sourceFile);
+        $destImg = imagecrop($srcImg, ['x' => $x, 'y' => $y, 'width' => $newImgWith, 'height' => $newImgHeight]);
+        if ($destImg !== FALSE) {
+            $tmpFile = jeedom::getTmpFolder(__CLASS__) . '/' . mt_rand() . $extension;
+            log::add(__CLASS__, 'debug', "crop: {$newImgWith}/{$newImgHeight} - {$x}/{$y} - output:{$tmpFile}");
+            $imageFunction($destImg, $tmpFile);
+            imagedestroy($destImg);
+            designImgSwitch::SaveImagePlanHeader($planHeader, $tmpFile);
+            unlink($tmpFile);
+        }
+        imagedestroy($srcImg);
     }
 
     public function refreshPlanHeaderBackground() {
@@ -200,19 +288,13 @@ class designImgSwitch extends eqLogic {
             $period = "night";
         }
         log::add(__CLASS__, 'debug', "day / night ? : {$period}");
-
-
         log::add(__CLASS__, 'debug', "condition as text : {$condition}");
-        $file = realpath(__DIR__ . '/../' . designImgSwitch::getActivePicturePath($period, $condition));
-        log::add(__CLASS__, 'debug', "file : {$file}");
 
-        $img_size = getimagesize($file);
-        $data = base64_encode(file_get_contents($file));
-        $sha512 = sha512($data);
-        $type = 'jpg';
+        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath($period, $condition));
+        log::add(__CLASS__, 'debug', "picturePath : {$picturePath}");
+
         foreach($planHeaders as $planId) {
-            log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image de fond du design %s avec %s.jpg" , __FILE__), $planId, $period . '/' . $condition));
-
+            log::add(__CLASS__, 'info', sprintf(__('Suppression des images précédentes pour le design %s' , __FILE__), $planId));
             $oldFiles = ls(__DIR__ . '/../../../../data/plan/','planHeader'.$planId.'*');
             if(count($oldFiles)  > 0){
                 foreach ($oldFiles as $oldFile) {
@@ -220,16 +302,7 @@ class designImgSwitch extends eqLogic {
                 }
             }
 
-            $planHeader = planHeader::byId($planId);
-            $planHeader->setImage('type', $type);
-            $planHeader->setImage('size', $img_size);
-            $planHeader->setImage('sha512', $sha512);
-            $planfilename = 'planHeader'.$planId.'-'.$sha512.'.'.$type;
-            $planfilepath = __DIR__ . '/../../../../data/plan/' . $planfilename;
-
-            log::add(__CLASS__, 'debug', "planfilepath : {$planfilepath}");
-            file_put_contents($planfilepath,file_get_contents($file));
-            $planHeader->save();
+            $this->AdaptAndSaveImgForPlan($picturePath, $planId);
         }
 
         $gotoDesignId = $this->getConfiguration('gotoDesign', '');

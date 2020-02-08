@@ -159,6 +159,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label help" data-help="{{Recadrer et centrer automatiquement l'image en fonction des dimensions du design en gardant les proportions de l'image}}">{{Recadrer}}</label>
+                                <div class="col-sm-9">
+                                    <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="cropImage" checked/>{{Activer}}</label>
+                                </div>
+                            </div>
                         </fieldset>
                     </form>
                 </div>
