@@ -21,7 +21,7 @@ lang: fr_FR
 
 - Ajout d'une config pour personnaliser les images
 
-## 2020-02-09
+## 2020-02-08
 
 - Ajout d'une option pour recadrer automatiquement l'image en fonction du design
 
