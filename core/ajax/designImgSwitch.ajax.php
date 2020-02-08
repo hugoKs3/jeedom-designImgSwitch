@@ -52,7 +52,7 @@ try {
         $return = array(
             'weather' => $weather,
             'period' => $period,
-            'url' => 'plugins/designImgSwitch/core/'.designImgSwitch::getActivePicturePath($period, $weather)
+            'url' => 'plugins/designImgSwitch/core/'.designImgSwitch::getPicturePath($period, $weather)
             );
         ajax::success($return);
     }
@@ -72,7 +72,7 @@ try {
         $return = array(
             'weather' => $weather,
             'period' => $period,
-            'url' => 'plugins/designImgSwitch/core/'.designImgSwitch::getActivePicturePath($period, $weather)
+            'url' => 'plugins/designImgSwitch/core/'.designImgSwitch::getPicturePath($period, $weather)
             );
         ajax::success($return);
     }
