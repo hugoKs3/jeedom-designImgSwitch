@@ -6,7 +6,7 @@ lang: fr_FR
 
 # Changelog
 
-[Voir la dernière version](#latest)
+[Voir la dernière version](#tocAnchor-1-1-4)
 
 ## 2019-09-08
 
@@ -21,7 +21,7 @@ lang: fr_FR
 
 - Ajout d'une config pour personnaliser les images
 
-## 2020-02-09 {#latest}
+## 2020-02-08
 
 - Ajout d'une option pour recadrer automatiquement l'image en fonction du design
 
