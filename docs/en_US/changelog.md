@@ -6,24 +6,24 @@ lang: en_US
 
 # Changelog
 
-[Voir la dernière version](#tocAnchor-1-1-4)
+[See the latest version](#tocAnchor-1-1-4)
 
 ## 2019-09-08
 
-- Première version
+- First version
 
 ## 2019-10-01
 
-- Ajout des traductions anglaise et allemande
-- Ajout d'une option pour forcer le rafraîchissement après une changement de l'image de fond
+- Added English and German translations
+- Added an option to force refresh after a change of the background image
 
 ## 2020-01-11
 
-- Ajout d'une config pour personnaliser les images
+- Add a config to customize images
 
 ## 2020-02-08
 
-- Ajout d'une option pour recadrer automatiquement l'image en fonction du design
+- Add option to automatically crop image based on design size
 
 # Documentation
 
