@@ -6,7 +6,7 @@ lang: fr_FR
 
 # Changelog
 
-[Voir la dernière version](#tocAnchor-1-1-4)
+[Voir la dernière version](#tocAnchor-1-1-5)
 
 ## 2019-09-08
 
@@ -24,6 +24,11 @@ lang: fr_FR
 ## 2020-02-08
 
 - Ajout d'une option pour recadrer automatiquement l'image en fonction du design
+
+## 2020-03-22
+
+- Fixe mineure en cas de suppression d'un équipement
+- Mise à jour du logo
 
 # Documentation
 
