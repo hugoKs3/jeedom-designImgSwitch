@@ -106,11 +106,11 @@ class designImgSwitch extends eqLogic {
     }
 
     public function preRemove() {
-
+        $this->removeListener();
     }
 
     public function postRemove() {
-        $this->removeListener();
+
     }
 
     private function checkConfigurationAndGetCommands(&$cmd_condition = null, &$cmd_sunrise=null, &$cmd_sunset=null) {
