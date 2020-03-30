@@ -9,8 +9,8 @@
 	"hasDependency" : false,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 0,
-	"changelog" : "https://mips2648.github.io/jeedom-designImgSwitch/#language#/changelog",
-	"documentation" : "https://mips2648.github.io/jeedom-designImgSwitch/#language#/",
+	"changelog" : "https://mips2648.github.io/jeedom-plugins-docs/designImgSwitch/#language#/changelog",
+	"documentation" : "https://mips2648.github.io/jeedom-plugins-docs/designImgSwitch/#language#/",
 	"link" : {
 		"forum":"https://community.jeedom.com/tags/plugin-designimgswitch",
 		"video" : ""
