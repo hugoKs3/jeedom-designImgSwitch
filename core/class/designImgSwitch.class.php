@@ -253,6 +253,11 @@ class designImgSwitch extends eqLogic {
 
             $this->AdaptAndSaveImgForPlan($picturePath, $planId);
         }
+        
+        //Refresh JPI
+        $cmd_JPIrefresh = cmd::byId(2082);
+        $cmd_JPIrefresh->execCmd();
+        
         /*
         $gotoDesignId = $this->getConfiguration('gotoDesign', '');
         if ($gotoDesignId != '') {
