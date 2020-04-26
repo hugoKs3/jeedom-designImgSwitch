@@ -50,7 +50,7 @@ class designImgSwitch extends eqLogic {
             return;
         }
 
-        $this->checkConfigurationAndGetCommands($cmd_condition, $cmd_sunrise, $cmd_sunset);
+        $this->checkConfigurationAndGetCommands($cmd_nuit);
 
         $listener = $this->getListener();
         if (!is_object($listener)) {
@@ -60,9 +60,7 @@ class designImgSwitch extends eqLogic {
             $listener->setOption(array('id' => $this->getId()));
         }
         $listener->emptyEvent();
-        $listener->addEvent($cmd_condition->getId());
-        $listener->addEvent($cmd_sunrise->getId());
-        $listener->addEvent($cmd_sunset->getId());
+        $listener->addEvent($cmd_nuit->getId());
         $listener->save();
 
         $this->refreshPlanHeaderBackground();
@@ -113,22 +111,10 @@ class designImgSwitch extends eqLogic {
 
     }
 
-    private function checkConfigurationAndGetCommands(&$cmd_condition = null, &$cmd_sunrise=null, &$cmd_sunset=null) {
-        $weatherEqLogicId = $this->getConfiguration('weatherEqLogic');
-        if ($weatherEqLogicId == '') {
-            throw new Exception(__("Veuillez configurer l'équipement météo à utiliser", __FILE__));
-        }
-        $cmd_condition = cmd::byEqLogicIdAndLogicalId($weatherEqLogicId, 'condition_id');
-        if (!is_object($cmd_condition)) {
-            throw new Exception(__("La commande 'Numéro condition' (condition_id) de l'équipement Météo (weather) est introuvable, veuillez vérifier la configuration." , __FILE__));
-        }
-        $cmd_sunrise = cmd::byEqLogicIdAndLogicalId($weatherEqLogicId, 'sunrise');
-        if (!is_object($cmd_sunrise)) {
-            throw new Exception(__("La commande 'Lever du soleil' (sunrise) de l'équipement Météo (weather) est introuvable, veuillez vérifier la configuration." , __FILE__));
-        }
-        $cmd_sunset = cmd::byEqLogicIdAndLogicalId($weatherEqLogicId, 'sunset');
-        if (!is_object($cmd_sunset)) {
-            throw new Exception(__("La commande 'Coucher du soleil' (sunset) de l'équipement Météo (weather) est introuvable, veuillez vérifier la configuration." , __FILE__));
+    private function checkConfigurationAndGetCommands(&$cmd_nuit = null) {
+        $cmd_nuit = cmd::byId(2084);
+        if (!is_object($cmd_nuit)) {
+            throw new Exception(__("La commande 'Nuit' est introuvable, veuillez vérifier le code." , __FILE__));
         }
     }
 
@@ -142,42 +128,11 @@ class designImgSwitch extends eqLogic {
         return $planHeaders;
     }
 
-    private static function ConditionAsText($condition) {
-        log::add(__CLASS__, 'debug', "condition: {$condition}");
-
-        if (in_array($condition, array('781', '905', '902', '900', '952', '953', '954', '955', '956', '957', '960', '961'))) {
-            return "wind";
-        } else if (in_array($condition, array('800', '951'))) {
-            return "sun";
-        } else if ($condition == '909') {
-            return "rain";
+    public static function getPicturePath($object, $condition) {
+        if (file_exists(__DIR__ . "/../pictures/custom/{$object}_{$condition}.png")) {
+            return "pictures/custom/{$object}_{$condition}.png";
         }
-
-        switch (substr($condition, 0,1)) {
-            case '2':
-                return "storm";
-            case '3':
-                return "mist";
-            case '5':
-                return "rain";
-            case '6':
-                return "snow";
-              case '7':
-                return "mist";
-            case '8':
-                return "cloud";
-        }
-
-        return "default";
-    }
-
-    public static function getPicturePath($period, $condition) {
-        if (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.jpg")) {
-            return "pictures/custom/{$period}-{$condition}.jpg";
-        } elseif (file_exists(__DIR__ . "/../pictures/custom/{$period}-{$condition}.png")) {
-            return "pictures/custom/{$period}-{$condition}.png";
-        }
-        return "pictures/default/{$period}-{$condition}.jpg";
+        return "pictures/default/day-default.jpg";
     }
 
     private static function SaveImagePlanHeader($planHeader, $sourceImage) {
@@ -200,12 +155,12 @@ class designImgSwitch extends eqLogic {
         $planHeader = planHeader::byId($planId);
         log::add(__CLASS__, 'info', sprintf(__("Mise à jour de l'image du design %s-%s avec %s" , __FILE__), $planId, $planHeader->getName(), $sourceFile));
 
-        if ($this->getConfiguration('cropImage', 1)==0) {
+        /*if ($this->getConfiguration('cropImage', 1)==0) {*/
             log::add(__CLASS__, 'debug', "no crop, copy image");
             designImgSwitch::SaveImagePlanHeader($planHeader, $sourceFile);
             return;
-        }
-
+        /*}*/
+        /*
         $img_size = getimagesize($sourceFile);
         $imgWidth = $img_size[0];
         $imgHeight = $img_size[1];
@@ -266,10 +221,11 @@ class designImgSwitch extends eqLogic {
             unlink($tmpFile);
         }
         imagedestroy($srcImg);
+        */
     }
 
     public function refreshPlanHeaderBackground() {
-        $this->checkConfigurationAndGetCommands($cmd_condition, $cmd_sunrise, $cmd_sunset);
+        $this->checkConfigurationAndGetCommands($cmd_nuit);
 
         $planHeaders = $this->getPlanHeaders();
         if (!is_array($planHeaders) || count($planHeaders)==0) {
@@ -277,20 +233,7 @@ class designImgSwitch extends eqLogic {
             return;
         }
 
-        $condition = designImgSwitch::ConditionAsText($cmd_condition->execCmd());
-        $sunrise = $cmd_sunrise->execCmd();
-        $sunset = $cmd_sunset->execCmd();
-
-        $hour = date('Hi');
-        if ($hour>=$sunrise && $hour < $sunset) {
-            $period = "day";
-        } else {
-            $period = "night";
-        }
-        log::add(__CLASS__, 'debug', "day / night ? : {$period}");
-        log::add(__CLASS__, 'debug', "condition as text : {$condition}");
-
-        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath($period, $condition));
+        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath('home', $cmd_nuit));
         log::add(__CLASS__, 'debug', "picturePath : {$picturePath}");
 
         foreach($planHeaders as $planId) {
@@ -304,12 +247,13 @@ class designImgSwitch extends eqLogic {
 
             $this->AdaptAndSaveImgForPlan($picturePath, $planId);
         }
-
+        /*
         $gotoDesignId = $this->getConfiguration('gotoDesign', '');
         if ($gotoDesignId != '') {
             log::add(__CLASS__, 'info', __('Changement design : ', __FILE__) . $gotoDesignId);
             event::add('jeedom::gotoplan', $gotoDesignId);
         }
+        */
     }
 }
 
