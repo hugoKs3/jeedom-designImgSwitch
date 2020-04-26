@@ -233,7 +233,13 @@ class designImgSwitch extends eqLogic {
             return;
         }
 
-        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath('home', $cmd_nuit));
+        $nuit = $cmd_nuit->execCmd();
+        $period = "jour";
+        if ($nuit == 1) {
+            $period = "nuit";
+        }
+        
+        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath('home', $period));
         log::add(__CLASS__, 'debug', "picturePath : {$picturePath}");
 
         foreach($planHeaders as $planId) {
