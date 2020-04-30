@@ -45,12 +45,13 @@ class designImgSwitch extends eqLogic {
     }
 
     private function setListener() {
+        /*
         if ($this->getIsEnable() == 0) {
             $this->removeListener();
             return;
         }
 
-        $this->checkConfigurationAndGetCommands($cmd_nuit);
+        $this->checkConfigurationAndGetCommands($cmd_lever, $cmd_coucher);
 
         $listener = $this->getListener();
         if (!is_object($listener)) {
@@ -64,6 +65,7 @@ class designImgSwitch extends eqLogic {
         $listener->save();
 
         $this->refreshPlanHeaderBackground();
+        */
     }
 
     public function preInsert() {
@@ -111,12 +113,18 @@ class designImgSwitch extends eqLogic {
 
     }
 
-    private function checkConfigurationAndGetCommands(&$cmd_nuit = null) {
-        $cmd_nuit = cmd::byId(2084);
-        if (!is_object($cmd_nuit)) {
-            throw new Exception(__("La commande 'Nuit' est introuvable, veuillez vérifier le code." , __FILE__));
+    
+    private function checkConfigurationAndGetCommands(&$cmd_lever = null, &$cmd_coucher = null) {
+        $cmd_lever = cmd::byId(1256);
+        if (!is_object($cmd_lever)) {
+            throw new Exception(__("La commande 'Lever' est introuvable, veuillez vérifier le code." , __FILE__));
+        }
+        $cmd_coucher = cmd::byId(1257);
+        if (!is_object($cmd_coucher)) {
+            throw new Exception(__("La commande 'Coucher' est introuvable, veuillez vérifier le code." , __FILE__));
         }
     }
+    
 
     private function getPlanHeaders() {
         $planHeaders = array();
@@ -225,23 +233,24 @@ class designImgSwitch extends eqLogic {
     }
 
     public function refreshPlanHeaderBackground() {
-        $this->checkConfigurationAndGetCommands($cmd_nuit);
+        $this->checkConfigurationAndGetCommands($cmd_lever, $cmd_coucher);
 
         $planHeaders = $this->getPlanHeaders();
         if (!is_array($planHeaders) || count($planHeaders)==0) {
             log::add(__CLASS__, 'info', __("Aucun design sélectionné." , __FILE__));
             return;
         }
-
-        $nuit = $cmd_nuit->execCmd();
+        
+        $lever = $cmd_lever->execCmd();
+        $coucher = $cmd_coucher->execCmd();
+        $now = date("Hi");
         $period = "jour";
-        if ($nuit == 1) {
+        if ($now >= $coucher || $now < $lever) {
             $period = "nuit";
         }
         
-        $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath('home', $period));
-        log::add(__CLASS__, 'debug', "picturePath : {$picturePath}");
-
+        log::add(__CLASS__, 'info', sprintf(__('Passage en mode %s (lever=%s, coucher=%s, now=%s)' , __FILE__), $period, $lever, $coucher, $now));
+        
         foreach($planHeaders as $planId) {
             log::add(__CLASS__, 'info', sprintf(__('Suppression des images précédentes pour le design %s' , __FILE__), $planId));
             $oldFiles = ls(__DIR__ . '/../../../../data/plan/','planHeader'.$planId.'*');
@@ -250,13 +259,10 @@ class designImgSwitch extends eqLogic {
                     unlink(__DIR__ . '/../../../../data/plan/'.$oldFile);
                 }
             }
-
+            $picturePath = realpath(__DIR__ . '/../' . designImgSwitch::getPicturePath($planId, $period));
+            log::add(__CLASS__, 'debug', "picturePath : {$picturePath}");
             $this->AdaptAndSaveImgForPlan($picturePath, $planId);
         }
-        
-        //Refresh JPI
-        $cmd_JPIrefresh = cmd::byId(2082);
-        $cmd_JPIrefresh->execCmd();
         
         /*
         $gotoDesignId = $this->getConfiguration('gotoDesign', '');
