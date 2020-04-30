@@ -45,14 +45,15 @@ class designImgSwitch extends eqLogic {
     }
 
     private function setListener() {
-        /*
+
         if ($this->getIsEnable() == 0) {
             $this->removeListener();
             return;
         }
 
-        $this->checkConfigurationAndGetCommands($cmd_lever, $cmd_coucher);
-
+        $this->checkConfigurationAndGetCommands($cmd_nuit);
+        
+        /*
         $listener = $this->getListener();
         if (!is_object($listener)) {
             $listener = new listener();
@@ -114,14 +115,10 @@ class designImgSwitch extends eqLogic {
     }
 
     
-    private function checkConfigurationAndGetCommands(&$cmd_lever = null, &$cmd_coucher = null) {
-        $cmd_lever = cmd::byId(1256);
-        if (!is_object($cmd_lever)) {
-            throw new Exception(__("La commande 'Lever' est introuvable, veuillez vérifier le code." , __FILE__));
-        }
-        $cmd_coucher = cmd::byId(1257);
-        if (!is_object($cmd_coucher)) {
-            throw new Exception(__("La commande 'Coucher' est introuvable, veuillez vérifier le code." , __FILE__));
+    private function checkConfigurationAndGetCommands(&$cmd_nuit = null) {
+        $cmd_nuit = cmd::byId(2084);
+        if (!is_object($cmd_nuit)) {
+            throw new Exception(__("La commande 'Nuit' est introuvable, veuillez vérifier le code." , __FILE__));
         }
     }
     
@@ -233,7 +230,7 @@ class designImgSwitch extends eqLogic {
     }
 
     public function refreshPlanHeaderBackground() {
-        $this->checkConfigurationAndGetCommands($cmd_lever, $cmd_coucher);
+        $this->checkConfigurationAndGetCommands($cmd_nuit);
 
         $planHeaders = $this->getPlanHeaders();
         if (!is_array($planHeaders) || count($planHeaders)==0) {
@@ -241,15 +238,13 @@ class designImgSwitch extends eqLogic {
             return;
         }
         
-        $lever = $cmd_lever->execCmd();
-        $coucher = $cmd_coucher->execCmd();
-        $now = date("Hi");
+        $nuit = $cmd_nuit->execCmd();
         $period = "jour";
-        if ($now >= $coucher || $now < $lever) {
+        if ($nuit == 1) {
             $period = "nuit";
         }
         
-        log::add(__CLASS__, 'info', sprintf(__('Passage en mode %s (lever=%s, coucher=%s, now=%s)' , __FILE__), $period, $lever, $coucher, $now));
+        log::add(__CLASS__, 'info', sprintf(__('Passage en mode %s' , __FILE__), $period));
         
         foreach($planHeaders as $planId) {
             log::add(__CLASS__, 'info', sprintf(__('Suppression des images précédentes pour le design %s' , __FILE__), $planId));
